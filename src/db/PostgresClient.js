@@ -1,4 +1,4 @@
-const { Pool } = require('pga');
+const { Pool } = require('pg');
 
 class PostgresClient {
   constructor() {
