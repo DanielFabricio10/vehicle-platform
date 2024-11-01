@@ -17,9 +17,9 @@
   } finally {
     await postgresClient.disconnect();
   }
-})();*/
+})();
 
-/*
+
 const MongoDBClient = require('./db/MongoClient');
 (async () => {
 const mongoClient = new MongoDBClient();
