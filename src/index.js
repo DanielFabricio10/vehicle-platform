@@ -1,40 +1,16 @@
-// src/index.js
-/*const PostgresClient = require('./db/PostgresClient');
+const express = require('express');
+const vehicleRoutes = require('./routes/vehicleRoutes'); // Importando o router
+const saleRoutes = require('./routes/saleRoutes');
 
-(async () => {
-  const postgresClient = new PostgresClient();
+const app = express();
+const port = 3000;
 
-  try {
-    await postgresClient.connect();
-
-    // Executa uma consulta para obter todas as tabelas (ou alguma outra query que você queira)
-    const query = 'select * from public."Veiculos";';
-    const tables = await postgresClient.executeQuery(query);
-    console.log('Dados:', tables);
-
-  } catch (error) {
-    console.error('Erro durante o teste de conexão ou consulta:', error);
-  } finally {
-    await postgresClient.disconnect();
-  }
-})();
+app.use(express.json());
 
 
-const MongoDBClient = require('./db/MongoClient');
-(async () => {
-const mongoClient = new MongoDBClient();
-  try {
-    await mongoClient.connect();
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/sales', saleRoutes);
 
-    // Supondo que você tenha uma coleção chamada 'testCollection'
-    const query = {}; // Aqui você pode passar um filtro, ou deixar vazio para obter todos os documentos
-    const results = await mongoClient.executeQuery('testCollection', query);
-    console.log('Documentos na coleção testCollection:', results);
-
-  } catch (error) {
-    console.error('Erro durante o teste de conexão ou consulta no MongoDB:', error);
-  } finally {
-    await mongoClient.disconnect();
-  }
-})();
-*/
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}`);
+});
