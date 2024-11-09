@@ -10,10 +10,10 @@ class MongoDBClient {
   async connect() {
     try {
       await this.client.connect();
-      console.log('Conexão com MongoDB estabelecida com sucesso!');
+      //console.log('Conexão com MongoDB estabelecida com sucesso!');
       this.db = this.client.db(this.databaseName);
     } catch (error) {
-      console.error('Erro ao conectar ao MongoDB:', error);
+      //console.error('Erro ao conectar ao MongoDB:', error);
       throw error;
     }
   }
@@ -21,9 +21,9 @@ class MongoDBClient {
   async disconnect() {
     try {
       await this.client.close();
-      console.log('Conexão com MongoDB encerrada.');
+      //console.log('Conexão com MongoDB encerrada.');
     } catch (error) {
-      console.error('Erro ao encerrar a conexão com MongoDB:', error);
+      //console.error('Erro ao encerrar a conexão com MongoDB:', error);
       throw error;
     }
   }
@@ -34,7 +34,7 @@ class MongoDBClient {
       const results = await collection.find(query).toArray();
       return results;
   } catch (error) {
-      console.error('Erro ao executar a query no MongoDB:', error);
+      //console.error('Erro ao executar a query no MongoDB:', error);
       throw error;
   }
   }
@@ -45,7 +45,7 @@ class MongoDBClient {
       const result = await collection.insertOne(vehicleData);
       return result;
     } catch (error) {
-      console.error('Erro ao inserir documento no MongoDB:', error);
+      //console.error('Erro ao inserir documento no MongoDB:', error);
       throw error;
     }
   }
@@ -56,7 +56,7 @@ class MongoDBClient {
         const result = await collection.updateOne(query, update);
         return result;
     } catch (error) {
-        console.error('Erro ao atualizar documento no MongoDB:', error);
+        //console.error('Erro ao atualizar documento no MongoDB:', error);
         throw error;
     }
   }
@@ -67,7 +67,7 @@ class MongoDBClient {
       const result = await collection.deleteMany(query);
       return result;
     } catch (error) {
-      console.error('Erro ao deletar documentos no MongoDB:', error);
+      //console.error('Erro ao deletar documentos no MongoDB:', error);
       throw error;
     }
   }
@@ -78,7 +78,7 @@ class MongoDBClient {
         const results = await collection.find(query).sort(sort).toArray();
         return results;
     } catch (error) {
-        console.error('Erro ao executar a query com ordenação no MongoDB:', error);
+        //console.error('Erro ao executar a query com ordenação no MongoDB:', error);
         throw error;
     }
   }

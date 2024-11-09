@@ -27,13 +27,13 @@ class Vehicle {
         if (!vehicleData.preco || typeof vehicleData.preco !== 'number' || vehicleData.preco <= 0) {
             return { valid: false, message: 'O preço deve ser um número maior que zero.' };
         }
-        if (!vehicleData.renavam || typeof vehicleData.renavam !== 'string') {
-            return { valid: false, message: 'O RENAVAM é obrigatório e deve ser uma string.' };
+        if (!vehicleData.renavam || typeof vehicleData.renavam !== 'string' || !/^\d{11}$/.test(vehicleData.renavam)) {
+            return { valid: false, message: 'O RENAVAM é obrigatório, deve ser uma string e conter exatamente 11 dígitos numéricos.' };
         }
-        if (!vehicleData.placa || typeof vehicleData.placa !== 'string') {
-            return { valid: false, message: 'A placa é obrigatória e deve ser uma string.' };
+        if (!vehicleData.placa || typeof vehicleData.placa !== 'string' || !/^[A-Z]{3}\d{4}$/.test(vehicleData.placa)) {
+            return { valid: false, message: 'A placa é obrigatória, deve ser uma string e seguir o formato AAA1234.' };
         }
-
+    
         return { valid: true, message: 'Veículo válido.' };
     }
   }

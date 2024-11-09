@@ -19,9 +19,14 @@ afterAll(async () => {
 });
 
 describe('Vehicle Controller', () => {
+
+    
+
+    //aqui
+
     it('deve cadastrar um veículo com sucesso', async () => {
         const vehicleData = {
-            renavam: '123456789017',
+            renavam: '12345679178',
             placa: 'ABC1259',
             marca: 'Marca X',
             modelo: 'Modelo Y',
@@ -49,7 +54,7 @@ describe('Vehicle Controller', () => {
 
     it('não deve permitir cadastrar um veículo com renavam ou placa duplicada', async () => {
         const vehicleData1 = {
-            renavam: '123456789018',
+            renavam: '12345679190',
             placa: 'XYZ1234',
             marca: 'Marca A',
             modelo: 'Modelo X',
@@ -59,7 +64,7 @@ describe('Vehicle Controller', () => {
         };
 
         const vehicleData2 = {
-            renavam: '123456789018',  // Duplicado
+            renavam: '12345679190',  // Duplicado
             placa: 'XYZ1234',  // Duplicado
             marca: 'Marca B',
             modelo: 'Modelo Y',
@@ -78,7 +83,7 @@ describe('Vehicle Controller', () => {
     });
 
     it('deve atualizar um veículo com sucesso', async () => {
-        const renavam = '123456789018';
+        const renavam = '12345679190';
         const updatedData = { preco: 28000, modelo: 'Modelo W', cor: 'Preto' };
 
         // Verifica se o veículo existe antes de tentar atualizar
@@ -97,7 +102,7 @@ describe('Vehicle Controller', () => {
     });
 
     it('não deve atualizar um veículo com renavam não cadastrado', async () => {
-        const renavam = '123456789020';
+        const renavam = '12345675195';
         const updateData = { preco: 35000, modelo: 'Modelo Z' };
 
         // Tenta atualizar o veículo com renavam não cadastrado
@@ -105,13 +110,32 @@ describe('Vehicle Controller', () => {
     });
 
     describe('Testes de Performance', () => {
-        it('deve suportar 100 inserções sem degradação de performance', async () => {
+        it('deve suportar 500 inserções sem degradação de performance', async () => {
             const startTime = Date.now();
             
-            for (let i = 0; i < 100; i++) {
+           
+
+            for (let i = 0; i < 500; i++) {
+                const renavam = Array.from({ length: 11 }, () => Math.floor(Math.random() * 10)).join('');
+
+                const generateRandomLetters = () => {
+                    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                    let randomLetters = '';
+                    for (let j = 0; j < 3; j++) {
+                        randomLetters += letters[Math.floor(Math.random() * letters.length)];
+                    }
+                    return randomLetters;
+                };
+    
+                const generateRandomNumbers = () => {
+                    return Math.floor(Math.random() * 10000).toString().padStart(4, '0'); // 4 números
+                };
+    
+                const placa = generateRandomLetters() + generateRandomNumbers();
+                
                 const vehicleData = {
-                    renavam: `123${i}56${i}890${i}`,
-                    placa: `EEE${i}`,
+                    renavam: renavam,  // Aqui garantimos que o renavam tenha 11 dígitos
+                    placa: placa,
                     marca: 'Marca X',
                     modelo: 'Modelo Y',
                     ano: 2020,
@@ -129,8 +153,8 @@ describe('Vehicle Controller', () => {
             expect(duration).toBeLessThan(5000); // Teste de performance
         });
 
-        it('deve atualizar um veículo com renavam 123456789018 repetidamente sem perda de performance', async () => {
-            const renavam = '123456789018';
+        it('deve atualizar um veículo com renavam 1234567919 repetidamente sem perda de performance', async () => {
+            const renavam = '12345679190';
             const updatedData = { preco: 28000, modelo: 'Modelo W', cor: 'Preto' };
             
             // Configura o número de iterações para o teste de performance
@@ -138,7 +162,7 @@ describe('Vehicle Controller', () => {
             
             const startTime = Date.now(); // Marca o tempo de início
     
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 500; i++) {
                 await VehicleController.updateVehicle(renavam, updatedData);
             }
     
