@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and start containers using Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up -d --build
+          docker-compose -f docker-compose.yml up --build
 
       - name: Wait for MongoDB to be ready
         run: |
@@ -46,7 +46,7 @@ jobs:
       - name: Run tests inside the container
         run: |
           # Executa os testes dentro do contêiner da aplicação
-          docker-compose run --rm app npm test
+          docker-compose exec app npm test
 
       - name: Stop and remove containers
         run: |

@@ -1,15 +1,24 @@
 const VehicleController = require('../src/controllers/VehicleController');
 const MongoDBClient = require('../src/db/MongoClient');
+
+// Configura o tempo limite global
 jest.setTimeout(10000); 
+
+// Instancia o MongoDB Client
+const mongoClient = new MongoDBClient();
+
+beforeAll(async () => {
+    // Conecta ao MongoDB antes de começar os testes
+    await mongoClient.connect();
+});
+
+afterAll(async () => {
+    // Fecha a conexão com o MongoDB após os testes
+    await mongoClient.disconnect();
+});
+
 describe('Vehicle Controller', () => {
-    jest.setTimeout(10000); 
-    const mongoClient = new MongoDBClient();
-    mongoClient.connect();
-
-    
-
     it('deve cadastrar um veículo com sucesso', async () => {
-        jest.setTimeout(10000);
         const vehicleData = {
             renavam: '123456789017',
             placa: 'ABC1259',
@@ -20,19 +29,17 @@ describe('Vehicle Controller', () => {
             preco: 25000
         };
 
-        // Chama o método addVehicle para adicionar o veículo
+        // Chama o método deleteAllVehicles antes de adicionar o novo veículo
         await VehicleController.deleteAllVehicles();
         const result = await VehicleController.addVehicle(vehicleData);
 
         // Verifica se o ID foi inserido corretamente
-        expect(result.insertedId).toBeDefined(); // Verifica que o insertedId foi gerado
+        expect(result.insertedId).toBeDefined();
 
         // Verifica se o veículo foi realmente inserido no banco
-        const insertedVehicle = (await mongoClient.executeQuery('vehicles', { renavam: vehicleData.renavam }))[0]; // Acessa o primeiro item do array retornado
+        const insertedVehicle = (await mongoClient.executeQuery('vehicles', { renavam: vehicleData.renavam }))[0];
         console.log('Veículo inserido:', insertedVehicle);
-        expect(insertedVehicle).toBeTruthy();  // Verifica se o veículo foi inserido
-
-        // Verifica se o veículo inserido tem os dados corretos
+        expect(insertedVehicle).toBeTruthy();
         expect(insertedVehicle.placa).toBe(vehicleData.placa);
         expect(insertedVehicle.marca).toBe(vehicleData.marca);
         expect(insertedVehicle.modelo).toBe(vehicleData.modelo);
@@ -40,7 +47,6 @@ describe('Vehicle Controller', () => {
     });
 
     it('não deve permitir cadastrar um veículo com renavam ou placa duplicada', async () => {
-        jest.setTimeout(10000);
         const vehicleData1 = {
             renavam: '123456789018',
             placa: 'XYZ1234',
@@ -61,7 +67,7 @@ describe('Vehicle Controller', () => {
             preco: 35000
         };
 
-        // Chama o método addVehicle para adicionar o primeiro veículo
+        // Chama o método deleteAllVehicles e insere o primeiro veículo
         await VehicleController.deleteAllVehicles();
         await VehicleController.addVehicle(vehicleData1);
 
@@ -70,32 +76,22 @@ describe('Vehicle Controller', () => {
     });
 
     it('deve atualizar um veículo com sucesso', async () => {
-        jest.setTimeout(10000);
         const renavam = '123456789018';
-
-        
-
-        // Adiciona o veículo
-        //const result = await VehicleController.addVehicle(vehicleData);
-
-        // Agora, vamos atualizar o veículo
         const updatedData = { preco: 28000, modelo: 'Modelo W', cor: 'Preto' };
+
+        // Atualiza o veículo
         await VehicleController.updateVehicle(renavam, updatedData);
 
         // Verifica se o veículo foi atualizado no banco
         const updatedVehicle = (await mongoClient.executeQuery('vehicles', { renavam: renavam }))[0];
-        expect(updatedVehicle).toBeTruthy();  // Verifica se o veículo foi encontrado
-
-        // Verifica se os dados do veículo foram atualizados corretamente
+        expect(updatedVehicle).toBeTruthy();
         expect(updatedVehicle.preco).toBe(updatedData.preco);
         expect(updatedVehicle.modelo).toBe(updatedData.modelo);
         expect(updatedVehicle.cor).toBe(updatedData.cor);
     });
 
     it('não deve atualizar um veículo com renavam não cadastrado', async () => {
-        jest.setTimeout(10000);
-        renavam = '123456789020';
-
+        const renavam = '123456789020';
         const updateData = { preco: 35000, modelo: 'Modelo Z' };
 
         // Tenta atualizar o veículo com renavam não cadastrado
