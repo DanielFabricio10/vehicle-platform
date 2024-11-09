@@ -41,7 +41,7 @@ router.put('/:renavam', async (req, res) => {
 
 router.delete('/', async (req, res) => {
     try {
-        await vehicleController.deleteAllVehicles();
+        await vehicleController.deleteAllVehicles({});
         res.status(200).json({ message: 'Todos os veículos foram deletados com sucesso!' });
     } catch (error) {
         console.error('Erro ao deletar veículos:', error);

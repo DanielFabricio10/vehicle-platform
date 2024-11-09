@@ -111,9 +111,9 @@ async function getVehicles(status, order) {
     }
 }
 
-async function deleteAllVehicles() { //REMOVER DEPOIS
+async function deleteAllVehicles(query) { //REMOVER DEPOIS
     await mongoClient.connect();
-    const result = await mongoClient.deleteMany('vehicles', {}); // Deleta todos os documentos
+    const result = await mongoClient.deleteMany('vehicles', query); // Deleta todos os documentos
     await mongoClient.disconnect();
     return result;
 }

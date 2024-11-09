@@ -14,6 +14,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
     // Fecha a conexão com o MongoDB após os testes
+    await VehicleController.deleteAllVehicles({});
     await mongoClient.disconnect();
 });
 
@@ -30,7 +31,7 @@ describe('Vehicle Controller', () => {
         };
 
         // Chama o método deleteAllVehicles antes de adicionar o novo veículo
-        await VehicleController.deleteAllVehicles();
+        await VehicleController.deleteAllVehicles({renavam: vehicleData.renavam});
         const result = await VehicleController.addVehicle(vehicleData);
 
         // Verifica se o ID foi inserido corretamente
@@ -68,7 +69,8 @@ describe('Vehicle Controller', () => {
         };
 
         // Chama o método deleteAllVehicles e insere o primeiro veículo
-        await VehicleController.deleteAllVehicles();
+        await VehicleController.deleteAllVehicles({renavam: vehicleData1.renavam});
+        await VehicleController.deleteAllVehicles({renavam: vehicleData2.renavam});
         await VehicleController.addVehicle(vehicleData1);
 
         // Tenta adicionar o veículo duplicado e espera que uma exceção seja lançada
@@ -78,6 +80,10 @@ describe('Vehicle Controller', () => {
     it('deve atualizar um veículo com sucesso', async () => {
         const renavam = '123456789018';
         const updatedData = { preco: 28000, modelo: 'Modelo W', cor: 'Preto' };
+
+        // Verifica se o veículo existe antes de tentar atualizar
+        const vehicleExists = await mongoClient.executeQuery('vehicles', { renavam: renavam });
+        expect(vehicleExists.length).toBeGreaterThan(0); // Garante que o veículo está presente
 
         // Atualiza o veículo
         await VehicleController.updateVehicle(renavam, updatedData);
@@ -96,5 +102,53 @@ describe('Vehicle Controller', () => {
 
         // Tenta atualizar o veículo com renavam não cadastrado
         await expect(VehicleController.updateVehicle(renavam, updateData)).rejects.toThrow('Veículo não encontrado');
+    });
+
+    describe('Testes de Performance', () => {
+        it('deve suportar 100 inserções sem degradação de performance', async () => {
+            const startTime = Date.now();
+            
+            for (let i = 0; i < 100; i++) {
+                const vehicleData = {
+                    renavam: `123${i}56${i}890${i}`,
+                    placa: `EEE${i}`,
+                    marca: 'Marca X',
+                    modelo: 'Modelo Y',
+                    ano: 2020,
+                    cor: 'Branco',
+                    preco: 25000 + i
+                };
+                
+                await VehicleController.addVehicle(vehicleData);
+            }
+    
+            const endTime = Date.now();
+            const duration = endTime - startTime;
+    
+            // Aqui você pode definir um tempo de execução esperado (exemplo: 5 segundos)
+            expect(duration).toBeLessThan(5000); // Teste de performance
+        });
+
+        it('deve atualizar um veículo com renavam 123456789018 repetidamente sem perda de performance', async () => {
+            const renavam = '123456789018';
+            const updatedData = { preco: 28000, modelo: 'Modelo W', cor: 'Preto' };
+            
+            // Configura o número de iterações para o teste de performance
+           
+            
+            const startTime = Date.now(); // Marca o tempo de início
+    
+            for (let i = 0; i < 100; i++) {
+                await VehicleController.updateVehicle(renavam, updatedData);
+            }
+    
+            const endTime = Date.now(); // Marca o tempo de fim
+            const duration = endTime - startTime; // Calcula a duração total
+    
+            //console.log(`Tempo total para ${iterations} atualizações: ${duration}ms`);
+            
+            // Define o limite de tempo máximo esperado para o número de atualizações
+            expect(duration).toBeLessThan(5000); // Ajuste o limite conforme o esperado para seu sistema
+        });
     });
 });
