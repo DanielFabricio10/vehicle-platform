@@ -33,10 +33,10 @@ class MongoDBClient {
       const collection = this.db.collection(collectionName);
       const results = await collection.find(query).toArray();
       return results;
-    } catch (error) {
+  } catch (error) {
       console.error('Erro ao executar a query no MongoDB:', error);
       throw error;
-    }
+  }
   }
 
   async insertOne(collectionName, vehicleData) {

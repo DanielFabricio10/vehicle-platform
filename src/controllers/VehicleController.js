@@ -13,12 +13,24 @@ async function addVehicle(vehicleData) {
         throw new Error(validation.message); 
     }
 
-    const existingVehicle = await mongoClient.executeQuery('vehicles', {
-        $or: [
-            { renavam: vehicleData.renavam },
-            { placa: vehicleData.placa }
-        ]
-    });
+    let existingVehicle;
+    try {
+        existingVehicle = await mongoClient.executeQuery('vehicles', {
+            $or: [
+                { renavam: vehicleData.renavam },
+                { placa: vehicleData.placa }
+            ]
+        });
+        console.log('existingVehicle:', existingVehicle);
+    } catch (error) {
+        await mongoClient.disconnect();
+        throw new Error('Erro ao verificar veículo no banco de dados.');
+    }
+
+    if (!Array.isArray(existingVehicle)) {
+        await mongoClient.disconnect();
+        throw new Error('Erro ao verificar veículo no banco de dados.');
+    }
 
     if (existingVehicle.length > 0) {
         await mongoClient.disconnect();
