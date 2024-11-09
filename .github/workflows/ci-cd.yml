@@ -14,25 +14,21 @@ jobs:
       matrix:
         node-version: [20.x]
 
-    services:
-      mongo:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: --health-cmd="curl localhost:27017" --health-timeout=30s --health-retries=3
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose
+
+      - name: Build and start containers using Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml up -d --build
 
       - name: Wait for MongoDB to be ready
         run: |
@@ -42,5 +38,12 @@ jobs:
             sleep 1
           done
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Run tests
         run: npm test
+
+      - name: Stop and remove containers
+        run: |
+          docker-compose down
