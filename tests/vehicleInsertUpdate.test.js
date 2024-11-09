@@ -1,8 +1,8 @@
 const VehicleController = require('../src/controllers/VehicleController');
 const MongoDBClient = require('../src/db/MongoClient');
-
+jest.setTimeout(10000); 
 describe('Vehicle Controller', () => {
-    
+    jest.setTimeout(10000); 
     const mongoClient = new MongoDBClient();
     mongoClient.connect();
 
