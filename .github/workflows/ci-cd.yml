@@ -46,7 +46,7 @@ jobs:
       - name: Run tests inside the container
         run: |
           # Executa os testes dentro do contêiner da aplicação
-          docker-compose exec app npm test
+          docker-compose run --rm app npm test
 
       - name: Stop and remove containers
         run: |
