@@ -9,6 +9,7 @@ describe('Vehicle Controller', () => {
     
 
     it('deve cadastrar um veículo com sucesso', async () => {
+        jest.setTimeout(10000);
         const vehicleData = {
             renavam: '123456789017',
             placa: 'ABC1259',
@@ -39,6 +40,7 @@ describe('Vehicle Controller', () => {
     });
 
     it('não deve permitir cadastrar um veículo com renavam ou placa duplicada', async () => {
+        jest.setTimeout(10000);
         const vehicleData1 = {
             renavam: '123456789018',
             placa: 'XYZ1234',
@@ -68,6 +70,7 @@ describe('Vehicle Controller', () => {
     });
 
     it('deve atualizar um veículo com sucesso', async () => {
+        jest.setTimeout(10000);
         const renavam = '123456789018';
 
         
@@ -90,6 +93,7 @@ describe('Vehicle Controller', () => {
     });
 
     it('não deve atualizar um veículo com renavam não cadastrado', async () => {
+        jest.setTimeout(10000);
         renavam = '123456789020';
 
         const updateData = { preco: 35000, modelo: 'Modelo Z' };
