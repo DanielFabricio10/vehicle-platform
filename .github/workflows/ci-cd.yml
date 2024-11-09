@@ -28,7 +28,7 @@ jobs:
 
       - name: Build and start containers using Docker Compose
         run: |
-          docker-compose -f docker-compose.yml up --build
+          docker-compose -f docker-compose.yml up -d --build
 
       - name: Wait for MongoDB to be ready
         run: |
