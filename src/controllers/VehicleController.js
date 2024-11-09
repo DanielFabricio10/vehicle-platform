@@ -75,6 +75,30 @@ const getAllVehicles = async () => {
     }
 };
 
+async function getVehicles(status, order) {
+    try {
+        await mongoClient.connect();
+
+        // Montando o filtro com base no status
+        const query = {};
+        if (status) {
+            query.status = status;
+        }
+
+        // Definindo a ordenação
+        const sortOrder = order === 'desc' ? -1 : 1;
+
+        // Executando a consulta
+        const vehicles = await mongoClient.executeQueryWithSort('vehicles', query, { preco: sortOrder });
+
+        await mongoClient.disconnect();
+        return vehicles;
+    } catch (error) {
+        console.error('Erro ao buscar veículos:', error);
+        throw new Error('Erro ao buscar veículos');
+    }
+}
+
 async function deleteAllVehicles() { //REMOVER DEPOIS
     await mongoClient.connect();
     const result = await mongoClient.deleteMany('vehicles', {}); // Deleta todos os documentos
@@ -86,5 +110,6 @@ module.exports = {
     addVehicle,
     updateVehicle,
     getAllVehicles,
-    deleteAllVehicles
+    deleteAllVehicles,
+    getVehicles
 };

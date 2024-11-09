@@ -71,6 +71,17 @@ class MongoDBClient {
       throw error;
     }
   }
+
+  async executeQueryWithSort(collectionName, query, sort) {
+    try {
+        const collection = this.db.collection(collectionName);
+        const results = await collection.find(query).sort(sort).toArray();
+        return results;
+    } catch (error) {
+        console.error('Erro ao executar a query com ordenação no MongoDB:', error);
+        throw error;
+    }
+  }
 }
 
 module.exports = MongoDBClient;

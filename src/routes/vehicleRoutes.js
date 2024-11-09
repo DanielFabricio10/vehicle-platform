@@ -16,11 +16,12 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', async (req, res) => {
+    const { status, order } = req.query;
+
     try {
-        const vehicles = await vehicleController.getAllVehicles();
+        const vehicles = await vehicleController.getVehicles(status, order);
         res.status(200).json(vehicles);
     } catch (error) {
-        console.error('Erro ao buscar veículos:', error);
         res.status(500).json({ error: 'Erro ao buscar veículos' });
     }
 });
