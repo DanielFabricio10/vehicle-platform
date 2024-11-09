@@ -39,10 +39,14 @@ jobs:
           done
 
       - name: Install dependencies
-        run: npm ci
-
-      - name: Run tests
-        run: npm test
+        run: |
+          # Instala dependências dentro do contêiner
+           docker-compose run --rm app npm ci
+  
+      - name: Run tests inside the container
+        run: |
+          # Executa os testes dentro do contêiner da aplicação
+          docker-compose run --rm app npm test
 
       - name: Stop and remove containers
         run: |
