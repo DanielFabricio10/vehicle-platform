@@ -92,7 +92,7 @@ describe('Venda de veículos', () => {
             cpfCnpj: '55566677788',
             nomeCliente: "João",
             renavam
-        };
+        }; 
     
         const sale = await SaleController.addSale(saleData);
         expect(sale.idPagamento).toBeDefined();
