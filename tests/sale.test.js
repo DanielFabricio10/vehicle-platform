@@ -70,7 +70,7 @@ describe('Venda de veículos', () => {
             cpfCnpj: '55566677788',
             nomeCliente: "João",
             renavam
-        };
+        };  
     
         const sale = await SaleController.addSale(saleData);
         expect(sale.idPagamento).toBeDefined();
@@ -79,7 +79,7 @@ describe('Venda de veículos', () => {
         expect(saleApproved.message).toBe('Status da venda atualizado para concluída.');
     
         await expect(SaleController.updateSaleStatus(sale.idPagamento, 'cancelada')).rejects.toThrow(
-            'Venda já está concluída ou cancelada.'
+            'Venda já está concluída ou cancelada.' 
         );
 
         await expect(SaleController.updateSaleStatus(sale.idPagamento, 'concluída')).rejects.toThrow(
@@ -92,7 +92,7 @@ describe('Venda de veículos', () => {
             cpfCnpj: '55566677788',
             nomeCliente: "João",
             renavam
-        };
+        }; 
     
         const sale = await SaleController.addSale(saleData);
         expect(sale.idPagamento).toBeDefined();
