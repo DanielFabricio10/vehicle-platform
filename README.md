@@ -16,7 +16,13 @@ git clone https://github.com/DanielFabricio10/vehicle-platform.git
 ```
 
 Agora no terminal de comando, acesse a pasta do projeto e execute:
-1. **docker-compose up -d --build** para subir os containers e buildar a aplicação
-2. **docker-compose run app npm test** para executar os testes e validar se todas as funcionalidades da aplicação estão operaveis
+1. para subir os containers e buildar a aplicação:
+```bash
+docker-compose up -d --build
+```
+2. para executar os testes e validar se todas as funcionalidades da aplicação estão operaveis
+```bash
+docker-compose run app npm test
+```
 
 **Pronto o projeto está operavel para validação/atualizações!**
