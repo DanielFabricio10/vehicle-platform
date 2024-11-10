@@ -1,16 +1,16 @@
 class Vehicle {
-    constructor({ marca, modelo, ano, cor, preco, renavam, placa }) {
-      this.dataCadastro = new Date().toISOString(); 
-      this.marca = marca;
-      this.modelo = modelo;
-      this.ano = ano;
-      this.cor = cor;
-      this.preco = preco;
-      this.renavam = renavam;
-      this.placa = placa;
-      this.status = 'disponível';
+    constructor({ marca, modelo, ano, cor, preco, renavam, placa, status = 'disponível' }) {
+        this.dataCadastro = new Date().toISOString(); 
+        this.marca = marca;
+        this.modelo = modelo;
+        this.ano = ano;
+        this.cor = cor;
+        this.preco = preco;
+        this.renavam = renavam;
+        this.placa = placa;
+        this.status = status; 
     }
-  
+
     static isValid(vehicleData) {
         if (!vehicleData.marca || typeof vehicleData.marca !== 'string') {
             return { valid: false, message: 'A marca é obrigatória e deve ser uma string.' };
@@ -33,10 +33,12 @@ class Vehicle {
         if (!vehicleData.placa || typeof vehicleData.placa !== 'string' || !/^[A-Z]{3}\d{4}$/.test(vehicleData.placa)) {
             return { valid: false, message: 'A placa é obrigatória, deve ser uma string e seguir o formato AAA1234.' };
         }
-    
+        if (vehicleData.status && !['disponível', 'vendido'].includes(vehicleData.status)) {
+            return { valid: false, message: 'O status deve ser "disponível" ou "vendido".' };
+        }
+
         return { valid: true, message: 'Veículo válido.' };
     }
-  }
-  
+}
+
 module.exports = Vehicle;
-  
