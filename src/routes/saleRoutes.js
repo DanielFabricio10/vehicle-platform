@@ -2,8 +2,15 @@ const express = require('express');
 const router = express.Router();
 const saleController = require('../controllers/SaleController');
 
-// Rota para adicionar venda
-router.post('/', saleController.addSale);
+router.post('/', async (req, res) => {
+    const saleData = req.body;
+    try {
+        const sales = await saleController.addSale(saleData);
+        res.status(200).json(sales);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao listar vendas' });
+    }
+});
 
 router.get('/', async (req, res) => {
     try {

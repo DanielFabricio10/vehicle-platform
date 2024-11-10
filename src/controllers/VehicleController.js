@@ -21,7 +21,6 @@ async function addVehicle(vehicleData) {
                 { placa: vehicleData.placa }
             ]
         });
-        console.log('existingVehicle:', existingVehicle);
     } catch (error) {
         await mongoClient.disconnect();
         throw new Error('Erro ao verificar veículo no banco de dados.');
@@ -74,46 +73,45 @@ async function updateVehicle(renavam, updatedData) {
     }
 }
 
-const getAllVehicles = async () => {
-    try {
-        await mongoClient.connect();
-        const vehicles = await mongoClient.executeQuery('vehicles', {});
-        return vehicles;
-    } catch (error) {
-        console.error('Erro ao buscar veículos:', error);
-        throw error;
-    } finally {
-        await mongoClient.disconnect();
-    }
-};
-
 async function getVehicles(status, order) {
     try {
         await mongoClient.connect();
 
-        // Montando o filtro com base no status
         const query = {};
-        if (status) {
+
+        if(status) {
             query.status = status;
         }
 
-        // Definindo a ordenação
         const sortOrder = order === 'desc' ? -1 : 1;
-
-        // Executando a consulta
         const vehicles = await mongoClient.executeQueryWithSort('vehicles', query, { preco: sortOrder });
 
         await mongoClient.disconnect();
         return vehicles;
+
     } catch (error) {
         console.error('Erro ao buscar veículos:', error);
         throw new Error('Erro ao buscar veículos');
     }
 }
 
-async function deleteAllVehicles(query) { //REMOVER DEPOIS
+async function getVehicleRenavam(renavamSelect) {
+    try {
+        await mongoClient.connect();
+        const vehicles = await mongoClient.executeQuery('vehicles', {renavam: renavamSelect});
+
+        await mongoClient.disconnect();
+        return vehicles[0];
+
+    } catch (error) {
+        console.error('Erro ao buscar veículos:', error);
+        throw new Error('Erro ao buscar veículos');
+    }
+}
+
+async function deleteAllVehicles(query) {
     await mongoClient.connect();
-    const result = await mongoClient.deleteMany('vehicles', query); // Deleta todos os documentos
+    const result = await mongoClient.deleteMany('vehicles', query);
     await mongoClient.disconnect();
     return result;
 }
@@ -121,7 +119,7 @@ async function deleteAllVehicles(query) { //REMOVER DEPOIS
 module.exports = {
     addVehicle,
     updateVehicle,
-    getAllVehicles,
     deleteAllVehicles,
-    getVehicles
+    getVehicles,
+    getVehicleRenavam
 };

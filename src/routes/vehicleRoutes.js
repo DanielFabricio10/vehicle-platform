@@ -26,6 +26,17 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/:renavam', async (req, res) => {
+    const renavam = req.params.renavam;
+
+    try {
+        const vehicle = await vehicleController.getVehicleRenavam(renavam);
+        res.status(200).json(vehicle);
+    } catch (error) {
+        res.status(500).json({ error: 'Erro ao busca veiculo' });
+    }
+});
+
 router.put('/:renavam', async (req, res) => {
     const renavam = req.params.renavam;
     const updatedData = req.body;

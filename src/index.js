@@ -1,5 +1,5 @@
 const express = require('express');
-const vehicleRoutes = require('./routes/vehicleRoutes'); // Importando o router
+const vehicleRoutes = require('./routes/vehicleRoutes'); 
 const saleRoutes = require('./routes/saleRoutes');
 
 const app = express();

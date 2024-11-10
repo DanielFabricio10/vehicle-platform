@@ -3,14 +3,12 @@ const MongoDBClient = require('../db/MongoClient');
 
 const mongoClient = new MongoDBClient();
 
-async function addSale(req, res) {
+async function addSale(saleData) {
   try {
-    const saleData = req.body;
     const newSale = await saleService.createSale(saleData);
-    res.status(201).json({ message: 'Carro vendido com sucesso', newSale});
+    return newSale;
   } catch (error) {
-    console.error('Erro ao cadastrar venda:', error);
-    res.status(400).json({ error: error.message });
+    throw error;
   }
 }
 
@@ -59,11 +57,23 @@ async function updateSaleStatus(saleId, status) {
       }
 
       await mongoClient.disconnect();
-      return { message: `Status da venda atualizado para "${status}".` };
+      return { message: 'Status da venda atualizado para '+status+'.' };
   } catch (error) {
-      console.error('Erro ao atualizar o status da venda:', error);
-      throw new Error('Erro ao atualizar o status da venda.');
+      throw error;
   }
+
 }
 
-module.exports = { addSale, getAllSales, updateSaleStatus};
+async function deleteAllSales(query) {
+    await mongoClient.connect();
+    const result = await mongoClient.deleteMany('sales', query);
+    await mongoClient.disconnect();
+    return result;
+}
+
+module.exports = { 
+    addSale, 
+    getAllSales, 
+    updateSaleStatus, 
+    deleteAllSales
+};
